@@ -1,0 +1,8 @@
+openpyxl
+numpy
+pandas
+requests
+scikit-image
+porespy
+opencv-python-headless
+flask
