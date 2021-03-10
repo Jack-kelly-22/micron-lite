@@ -31,7 +31,7 @@ def try_circle(coords, middle,size):
         ls_x,ls_y = disk((middle[0],middle[1]),i)
         j = 0
         circle_pts = {(ls_x[k],ls_y[k]) for k in range(1,len(ls_x))}
-        if not coord_utils.check_circle(circle_pts,coords):
+        if not check_circle(circle_pts,coords):
             go = False
         i = i + 1
     return i-1,(middle[0],middle[1])
@@ -62,7 +62,7 @@ def get_largest_circle_in_region(coords,max = 1,centroid= None):
             max_pts = pts
             center = pt
 
-    print("found max-:", max)
+    #print("found max-:", max)
     return center,max,
 
 

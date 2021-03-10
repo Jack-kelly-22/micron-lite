@@ -34,12 +34,14 @@ class Interface():
         self.multi_var = tk.BooleanVar(value=self.options['constants']['multi'])
         self.local_var = tk.BooleanVar(value=self.options['constants']['use_alt'])
         self.crop_var = tk.BooleanVar(value= self.options['constants']['crop'])
-        self.boarder_var = tk.StringVar(value="0")
+        self.boarder_var = tk.StringVar(value=self.options['constants']['boarder'])
         self.name_var = tk.StringVar(value=self.options['job_name'])
-        # self.adjust_var = tk.BooleanVar(value=self.options['constants'][])
         self.num_var = tk.StringVar(value=self.options['constants']['num_circles'])
         self.warn_var = tk.StringVar(value=self.options['constants']['warn_size'])
         self.job_num = tk.StringVar(value= "0")
+        self.min_pore = tk.StringVar(value=self.options['constants']['min_porosity'])
+        self.max_pore = tk.StringVar(value=self.options['constants']['max_porosity'])
+        self.max_diam = tk.StringVar(value=self.options['constants']['max_diam'])
         self.options['constants']['min_ignore'] = tk.StringVar()
         font_1 = "Verdana 22 bold"
         font_2 = "Verdana 16"
@@ -47,9 +49,8 @@ class Interface():
         label = tk.Label(self.root, text="Frames",font = font_1).place(x=10, y=20)
         button = tk.Button(self.root, text="Select Frames", command=self.browseFiles).place(x=230, y=20)
         # output dirrectory button
-        pass_label = tk.Label(self.root, text="Pass Requirements ", ).place(x=120, y=350)
         # button = tk.Button(self.root, text="Select Folder", command=self.browseOutput).place(x=170, y=350)
-        button = tk.Button(self.root, text="Add Job To Queue", command=self.execute_outputs).place(x=250, y=410)
+        button = tk.Button(self.root, text="Add Job To Queue", command=self.execute_outputs).place(x=250, y=470)
 
         #setup constants areas
         x_const = 400
@@ -106,9 +107,24 @@ class Interface():
                               textvariable=self.name_var
                               ).place(x=540, y=y_const, width=180)
         self.frame.place(x=20, y=90)
-        button = tk.Button(self.root, text="quit", command=self.close).place(x=50, y=440)
-
+        button = tk.Button(self.root, text="quit", command=self.close).place(x=50, y=470)
+        self.create_warning_frame()
         self.root.mainloop()
+
+    def create_warning_frame(self):
+        font_1 = "Verdana 22 bold"
+        font_2 = "Verdana 12"
+        #pass requirement header
+        tk.Label(self.root, text="Pass Requirements", font=font_1).place(x=120, y=350)
+        #min porosity label and input
+        tk.Label(self.root, text="Min porosity(%)", font=font_2).place(x=20, y=390)
+        tk.Entry(self.root,textvariable=self.min_pore).place(x=130, y=390, width=50)
+        # max porosity label and input
+        tk.Label(self.root, text="Max porosity(%)", font=font_2).place(x=210, y=390)
+        tk.Entry(self.root, textvariable=self.max_pore).place(x=320, y=390, width=50)
+        #max circle diameter
+        tk.Label(self.root, text="Max diameter(microns)", font=font_2).place(x=20, y=430)
+        tk.Entry(self.root, textvariable=self.max_diam).place(x=200, y=430, width=100)
 
     def browseFiles(self):
         "Prompts user for folders to include"
@@ -142,9 +158,13 @@ class Interface():
         constants['use_alt'] = self.local_var.get()
         constants['alt_thresh'] = self.thresh_var.get()
         constants['multi'] = self.multi_var.get()
-        constants['num_circles'] = self.num_var.get()
+        constants['num_circles'] = int(self.num_var.get())
         constants['fiber_type']='dark'
         constants['min_ignore'] = self.min_var.get()
+        constants['max_diam'] = float(self.max_diam.get())
+        constants['min_porosity'] = float(self.min_pore.get())
+        constants['max_porosity'] = float(self.max_pore.get())
+
         if int(self.boarder_var.get()) > 1:
             constants['crop'] = True
             constants['boarder'] = int(self.boarder_var.get())
@@ -177,7 +197,7 @@ class Interface():
     def execute_outputs(self):
         self.update_options()
         #sent post https call to backend to queue job
-        request = requests.post('http://127.0.0.1:8050/queue', json=self.options)
+        request = requests.post('http://127.0.0.1:5000/queue', json=self.options)
         print("queue request sent with options: ",self.options)
         #remove folders from added folders and reset the values in scrollable frame
         self.clear_options()

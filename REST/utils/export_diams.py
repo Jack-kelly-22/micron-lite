@@ -1,25 +1,13 @@
 import sqlite3
 import csv
-
 from numpy import ndarray,array,load,save
-from io import BytesIO
-from sqlite3 import Binary
-def convert_array(text):
-        out = BytesIO(text)
-        out.seek(0)
-        return load(out,allow_pickle=True)
-
-def adapt_array(arr):
-        out = BytesIO()
-        save(out,arr)
-        out.seek(0)
-        return Binary(out.read())
+from REST.utils.sql_utils import convert_array,adapt_array
 
 def write_diam(job_name1):
         sqlite3.register_adapter(ndarray,adapt_array)
         sqlite3.register_converter("array", convert_array)
 
-        conn = sqlite3.connect('pore.db',detect_types=sqlite3.PARSE_DECLTYPES)
+        conn = sqlite3.connect('REST/data/pore.db',detect_types=sqlite3.PARSE_DECLTYPES)
         cur = conn.cursor()
         cur.execute("SELECT * FROM jobs_index WHERE job_name=? LIMIT 1;",(job_name1,))
         row = cur.fetchall()
@@ -33,12 +21,9 @@ def write_diam(job_name1):
                 scale = float(images[0][1])
                 print('scale:', scale)
                 for image in images[0][0]:
-                        #print("image id ,", image)
                         cur = conn.cursor()
-
                         cur.execute("SELECT largest_holes FROM image_output WHERE img_id=?;", (image,))
                         holes = cur.fetchall()
-                        #print('holes :',type(holes),)
                         hole_ls = holes[0][0]
                         print("tye:",type(hole_ls))
                         for hole in hole_ls:
@@ -61,6 +46,6 @@ def write_diam(job_name1):
                         csvwriter.writerow([round(d,2)])
         return filename,len(diams)
 
-job_name =input("please enter the name of the job you would like diameters of:")
-f_name,diams = write_diam(job_name)
-print(diams," diameters saved in: ", f_name,)
+# job_name =input("please enter the name of the job you would like diameters of:")
+# f_name,diams = write_diam(job_name)
+# print(diams," diameters saved in: ", f_name,)

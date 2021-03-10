@@ -14,15 +14,19 @@ class Job:
         self.job_id = str(uuid.uuid4()).replace('-', '') + "_" + self.job_name
         self.type = int(options["input_type"])
         self.tags = str(options["tags"])
+        self.options = options
         self.frame_ls = []
         self.frame_ref_ls = []
-        print(listdir(".."))
         self.try_make_dir()
         self.frame_paths = options['frame_paths']
         self.create_frames(options, db_ref, options["frame_paths"])
         self.constants = options["constants"]
         self.update_ref_ls()
         self.add_job_db()
+
+    def get_dic(self):
+        self.options['frame_ls'] = self.frame_ls
+        return self.options
 
     def try_make_dir(self):
         """will attempt to create directory for job outputs
@@ -35,20 +39,17 @@ class Job:
             rmtree("./job-data/" + self.job_name)
             makedirs("./job-data/" + self.job_name)
 
-    def __repr__(self):
-        s = "(JOB)  job_name:" + self.job_name + "\t job_id:" + self.job_id
-        s = s + "\t type:" + str(type) + "\t tags" + str(self.tags)
-        return s
 
     def update_ref_ls(self):
         for frame in self.frame_ls:
             self.frame_ref_ls.append(frame.id)
+
         print("job frame ref ls updated")
 
     def add_job_db(self):
         sqlite3.register_adapter(ndarray, adapt_array)
         sqlite3.register_converter("array", convert_array)
-        conn = sqlite3.connect("dash_app/data/pore.db", detect_types=sqlite3.PARSE_DECLTYPES)
+        conn = sqlite3.connect("REST/data/pore.db", detect_types=sqlite3.PARSE_DECLTYPES)
 
         out_path = "." + "/job-data/" + self.job_name
         sql_str = ''' insert into jobs_index(job_id,job_name,job_path,job_type,tags,frame_ls,frame_names)
@@ -63,10 +64,5 @@ class Job:
         i = 0
         out_path = "/job-data/"
         for fpath in frame_paths:
-            print("fpath", fpath)
-            f = Frame(fpath, out_path, options["program_type"],
-                      options["constants"],
-                      db_ref,
-                      self.job_name,
-                      self.tags)
+            f = Frame(fpath,options,db_ref)
             self.frame_ls.append(f)

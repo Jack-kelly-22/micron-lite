@@ -30,7 +30,7 @@ class Frame:
         inspect_mode: light/dark
         """
         self.name = os.path.basename(os.path.normpath(path))
-
+        self.options = options
         self.job_name = options['job_name']
         self.image_paths = self.get_images_in_path(path)
         self.type = options['input_type']
@@ -70,7 +70,7 @@ class Frame:
         sqlite3.register_adapter(ndarray, adapt_array)
         sqlite3.register_converter("array", convert_array)
         conn = sqlite3.connect(
-            "dash_app/data/pore.db",
+            "REST/data/pore.db",
             detect_types=sqlite3.PARSE_DECLTYPES)
         out_path = "./job-data/" + self.job_name + '/' + self.name
         sql_str = ''' insert into frames_index(
@@ -85,11 +85,9 @@ class Frame:
         hist,
         hist_bins,
         hist_area_img_path,
-        hist_diam_img_path,
-        disk_area_img_path,
-        disk_pore_img_path,
-        heat_img_path)
-                        VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)'''
+        hist_diam_img_path
+        )
+                        VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)'''
         type = 0
         if self.type == 'light':
             type = 1
@@ -102,7 +100,7 @@ class Frame:
                                self.name,
                                out_path,
                                int(type),
-                               str(self.tags),
+                               str(''),
                                array(self.image_ref_ls),
                                float(self.avg_pore),
                                int(thresh),
@@ -111,9 +109,9 @@ class Frame:
                                array(self.hist_bins),
                                self.area_hist_path,
                                self.diam_hist_path,
-                               self.area_pie_path,
-                               self.pore_pie_path,
-                               self.heat_img_path
+                               # self.area_pie_path,
+                               # self.pore_pie_path,
+                               # self.heat_img_path
                                ))
         conn.commit()
         conn.close()
@@ -125,7 +123,20 @@ class Frame:
         """
         i = 0
         for img in self.image_paths:
-            self.process_image(img,self.options)
+            img_dic = {
+                "img_path": img,
+                'id':'',
+                "pass": False,
+                'img_name': '',
+                "fail_reason": [],
+                "largest_pore": 0,
+                "porosity": 0,
+                "avg_pore": 0,
+                "out_path": './job-data/'+self.out_path,
+                "num_violated": 0,
+                "violated_pores": []
+            }
+            self.process_image(img_dic,self.options)
             i = i + 1
         self.histogram, self.hist_bins = get_histogram(self.all_areas, self.constants['scale'],
                                                        self.constants['min_ignore'])
@@ -138,12 +149,14 @@ class Frame:
             img_dic,
             options
         )
-        self.image_data_ls.append(new_image)
-        self.image_ref_ls.append(new_image.im_id)
-        self.all_areas = self.all_areas + new_image.all_areas
-        self.largest_holes = self.largest_holes + new_image.largest_holes
-        self.largest_areas = self.largest_areas + new_image.largest_areas
-        self.avg_pore = self.avg_pore + new_image.porosity
+        new_image_dic = new_image.get_dic()
+        self.image_data_ls.append(new_image_dic)
+        self.image_ref_ls.append(new_image_dic['id'])
+        if not options['simple']:
+            self.all_areas = self.all_areas + new_image_dic['all_areas']
+            self.largest_holes = self.largest_holes + new_image_dic['largest_holes']
+            self.largest_areas = self.largest_areas + new_image_dic['largest_areas']
+        self.avg_pore = self.avg_pore + new_image_dic['porosity']
 
     def save_histogram_hole_diameter(self):
         # print(self.largest_holes)
