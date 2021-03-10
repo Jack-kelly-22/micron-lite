@@ -83,12 +83,15 @@ def get_reg_thresh_image(image, threshold, fiber):
 
 def color_circle(c,r,image,scale):
     x_ls,y_ls = circle_perimeter(int(c[0]),int(c[1]),int(r/scale))
-    #set_color(image, (y_ls,x_ls), color=(0, 77, 253))
-    set_color(image, (y_ls, x_ls), color=(0, 77, 253))
+    set_color(image, (y_ls, x_ls), color=(245, 0, 0))
     x_ls,y_ls = circle_perimeter(int(c[0]),int(c[1]),int(r/scale)-1)
-    set_color(image, (y_ls, x_ls), color=(0, 77, 253))
-    x_ls,y_ls = circle_perimeter(int(c[0]),int(c[1]),int(r/scale)-1)
-    set_color(image, (y_ls, x_ls), color=(0, 77, 253))
+    set_color(image, (y_ls, x_ls), color=(245, 0, 0))
+    x_ls,y_ls = circle_perimeter(int(c[0]),int(c[1]),int(r/scale)-2)
+    set_color(image, (y_ls, x_ls), color=(245, 0, 0))
+    x_ls, y_ls = circle_perimeter(int(c[0]), int(c[1]), int(r / scale) - 3)
+    set_color(image, (y_ls, x_ls), color=(245, 0, 0))
+    x_ls, y_ls = circle_perimeter(int(c[0]), int(c[1]), int(r / scale) - 4)
+    set_color(image, (y_ls, x_ls), color=(245, 0, 0))
 
 
 def color_holes(hole_ls, image):
@@ -98,7 +101,7 @@ def color_holes(hole_ls, image):
 
 def color_holes2(hole_ls, image,scale):
     for hole in hole_ls:
-        color_circle(hole[0],hole[1],image,scale)
+        color_circle(hole[0],hole[1]/2,image,scale)
     return image
 
 

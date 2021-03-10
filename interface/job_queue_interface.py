@@ -3,20 +3,25 @@ import os
 import tkinter as tk
 from tkinter import filedialog
 import requests
+from REST.dtypes.Job import Job
+from REST.dtypes.db_helper import Db_helper
+from SpreadWriter import SpreadWriter
 from interface.ScrollableFrame import ScrollableFrame
 # from utils import default_settings
 from constants import constants
-
+import queue
+import threading
+import asyncio
 # Function for opening the
 # file explorer window
 class Interface():
-    def __init__(self):
-
+    def __init__(self,async_loop):
+        self.thread_queue = queue.Queue()
         self.base_folder = ""
         self.added_folders = []
         self.output_folder = ""
         self.include_list = []
-
+        self.async_loop = async_loop
         self.root = tk.Tk()
         self.root.title('Porosity Calculator')
         self.x_start = 0
@@ -152,15 +157,16 @@ class Interface():
 
     def update_constants(self):
         constants = self.options['constants']
-        constants['thresh'] = self.thresh_var.get()
-        constants['fiber_type'] = self.fiber_var
-        constants['warn_size'] = self.warn_var.get()
+        constants['thresh'] = int(self.thresh_var.get())
+        constants['fiber_type'] = self.fiber_var.get()
+        constants['warn_size'] = int(self.warn_var.get())
         constants['use_alt'] = self.local_var.get()
-        constants['alt_thresh'] = self.thresh_var.get()
-        constants['multi'] = self.multi_var.get()
+        constants['alt_thresh'] = int(self.thresh_var.get())
+        constants['multi'] = bool(self.multi_var.get())
         constants['num_circles'] = int(self.num_var.get())
         constants['fiber_type']='dark'
-        constants['min_ignore'] = self.min_var.get()
+        constants['scale'] = float(self.scale_var.get())
+        constants['min_ignore'] = float(self.min_var.get())
         constants['max_diam'] = float(self.max_diam.get())
         constants['min_porosity'] = float(self.min_pore.get())
         constants['max_porosity'] = float(self.max_pore.get())
@@ -170,6 +176,22 @@ class Interface():
             constants['boarder'] = int(self.boarder_var.get())
 
         self.options['constants'] = constants
+
+
+
+
+    def start_working_2(self,options):
+        db_helper = Db_helper()
+        # opt = self.thread_queue.get(0)
+        # self._print(self.res)
+        print("SIMPLE QUEUE JOB")
+        job = Job(options, db_helper)
+        filter_dic = job.get_dic()
+        # for folder in filter_dic['frame_ls']:
+        SpreadWriter(filter_dic)
+        # self.thread_queue.put(options)
+        # print("START WORKING")
+        # self.root.after(100, self.listen_for_result)
 
 
     def update_options(self):
@@ -197,7 +219,33 @@ class Interface():
     def execute_outputs(self):
         self.update_options()
         #sent post https call to backend to queue job
-        request = requests.post('http://127.0.0.1:5000/queue', json=self.options)
+        # request = requests.post('http://127.0.0.1:5000/queue', json=self.options)
+        threading.Thread(target=_asyncio_thread, args=(self.async_loop,self.options)).start()
+        self.async_loop = asyncio.get_event_loop()
         print("queue request sent with options: ",self.options)
         #remove folders from added folders and reset the values in scrollable frame
         self.clear_options()
+
+def _asyncio_thread(async_loop,options):
+    # async_loop.run_until_complete(do_job(options))
+    asyncio.ensure_future(do_job(options))
+    # await do_job(options)
+
+
+def do_tasks(async_loop):
+    """ Button-Event-Handler starting the asyncio part. """
+    threading.Thread(target=_asyncio_thread, args=(async_loop,)).start()
+
+
+
+def do_job(options):
+    db_helper = Db_helper()
+    print("SIMPLE QUEUE JOB")
+    job = Job(options, db_helper)
+    filter_dic = job.get_dic()
+    SpreadWriter(filter_dic)
+
+
+if __name__ == '__main__':
+    async_loop = asyncio.get_event_loop()
+    Interface(async_loop)

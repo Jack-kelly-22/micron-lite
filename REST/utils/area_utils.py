@@ -13,7 +13,7 @@ def check_circle(circle_pts,area_pts):
     if(circle_pts.issubset(area_pts)):
         return True
     else:
-        if(len(circle_pts-area_pts)<5):
+        if(len(circle_pts-area_pts)<4):
             return True
     return False
 

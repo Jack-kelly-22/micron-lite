@@ -58,7 +58,7 @@ class Job:
         self.job_id, self.job_name, out_path, self.type, self.tags, array(self.frame_ref_ls), array(self.frame_paths)))
         conn.commit()
         conn.close()
-        write_diam(self.job_name)
+        #        write_diam(self.job_name)
 
     def create_frames(self, options, db_ref, frame_paths):
         i = 0

@@ -34,10 +34,10 @@ class constants:
       "frame_paths": [],
       'frames':[],
       "constants": constants1,
-      "tags": ["NULL(lol)"],
+      "tags": ["NULL"],
       "largest_pore": 0,
       "out_path": "/job-data/",
-      'max_porosity':0.9,
+      # 'max_porosity':0.9,
       "num_images":0
     }
     # self.frame_dic = {}
