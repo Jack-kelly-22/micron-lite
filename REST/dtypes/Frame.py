@@ -57,14 +57,9 @@ class Frame:
         try:
             mkdir("./job-data/" + self.job_name + '/' + self.name)
         except Exception as e:
-            # print('frame exist... NUKE...', "./job-data/" + self.job_name + '/' + self.name)
-            # print("with exception:", e)
             shutil.rmtree("./job-data/" + self.job_name + '/' + self.name)
             os.makedirs("./job-data/" + self.job_name + '/' + self.name)
 
-    def save_histograms(self):
-        self.save_histogram_hole_diameter()
-        self.save_histogram_hole_area()
 
     def add_frame_db(self):
         sqlite3.register_adapter(ndarray, adapt_array)
@@ -109,9 +104,6 @@ class Frame:
                                array(self.hist_bins),
                                self.area_hist_path,
                                self.diam_hist_path,
-                               # self.area_pie_path,
-                               # self.pore_pie_path,
-                               # self.heat_img_path
                                ))
         conn.commit()
         conn.close()
@@ -134,7 +126,7 @@ class Frame:
                 "avg_pore": 0,
                 "out_path": './job-data/'+self.out_path,
                 "num_violated": 0,
-                "violated_pores": []
+                "violated_pores": [],
             }
             self.process_image(img_dic,self.options)
             i = i + 1

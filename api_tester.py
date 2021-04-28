@@ -2,9 +2,11 @@ import requests
 from constants import constants
 from index import server
 import threading
+import time
 # from interface.job_queue_interface import Interface
 
 threading.Thread(target=server.run).start()
+time.sleep(5)
 const = constants()
 options = const.default_options
 options['frame_paths'].append("/Users/jackkelly/PycharmProjects/pore_hr/frames_folder/diversity-training")

@@ -19,9 +19,10 @@ def check_circle(circle_pts,area_pts):
 
 
 def try_circle(coords, middle,size):
-    """Attempts to place circle with radius of size at coords middle
-    Parameters:
-        coords:
+    """Attempts to place circle with radius of 'size' at coords middle
+    incriments the size of the circle until it no longer fits then
+    returns the largest circle with center point 'middle' that fits in
+    the area defined by coords
     """
     go = True
     i = size
@@ -49,11 +50,9 @@ def get_largest_circle_in_region(coords,max = 1,centroid= None):
     n = 0
     coord_set = coords
     i = max
-    #coord_set = {(reg_coords[j][0],reg_coords[j][1]) for j in range(0,len(coords))}
     for pt in reg_coords:
         if centroid is not None:
             pt = (centroid[0], centroid[1])
-            #print("testing centroid:", pt, " first")
             centroid = None
             center=pt
         n, pts = try_circle(coord_set, pt, max)

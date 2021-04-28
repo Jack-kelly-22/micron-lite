@@ -58,7 +58,7 @@ class SpreadWriter:
 
         for frame in filter_dic['frame_ls']:
             for img_dic in frame.image_data_ls:
-                self.page['A' + str(self.i)] = img_dic['img_name']
+                self.page['A' + str(self.i)] = img_dic['img_name'] + '_' + frame.name
 
                 self.page['B' + str(self.i)] = img_dic['porosity']
                 if img_dic['porosity']<filter_dic['constants']['min_porosity']:
@@ -110,11 +110,15 @@ class SpreadWriter:
         self.page.merge_cells('A'+str(self.i)+':E'+str(self.i))
         self.i = self.i + 1
         for frame in filter_dic['frame_ls']:
+            if len(frame.image_data_ls)!=0:
+                self.page['A' + str(self.i)] = "Frame: "
+                self.page["B" + str(self.i)] = frame.name
+                self.i=self.i+2
             for image in frame.image_data_ls:
                 if not image['pass']:
                     self.rejected_header(image)
                     #add rejected image into spreadsheet
-                    fail_img = Image('./job-data/'+self.job_name+'/'+image['img_name'])
+                    fail_img = Image('./job-data/'+self.job_name+'/'+frame.name+'/'+image['img_name'])
                     fail_img.anchor = 'C' + str(self.i)
                     fail_img.width = 400
                     fail_img.height = 300
@@ -124,7 +128,7 @@ class SpreadWriter:
                         self.page['A'+str(self.i+j)] = pore[1]
                         self.page['B'+str(self.i+j)] = '( '+str(pore[0][0])+', ' + str(pore[0][1]) + " )"
                         j += 1
-                    if j>15:
+                    if j>17:
                         self.i += j
                     else:
-                        self.i += 15
+                        self.i += 17

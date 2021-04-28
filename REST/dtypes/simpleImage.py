@@ -2,7 +2,7 @@ from skimage.measure import label,regionprops
 import os
 from skimage.io import imread
 from REST.utils import image_utils
-from REST import area_utils
+from REST.utils import area_utils
 from math import pi
 from porespy.metrics import porosity
 from uuid import uuid4
@@ -22,7 +22,6 @@ class SimpleImage:
         self.out_image = self.image_data
         regions = self.get_regions()
         self.image_dic['largest_pore'] = 0
-
         self.image_dic['pass'] = self.is_pass(regions)
 
         if not self.image_dic['pass']:
@@ -48,9 +47,9 @@ class SimpleImage:
         if self.constants['crop']:
             i=0
             while i<len(self.violated_circles):
-                center = (self.violated_circles[i][0][0]+self.constants['boarder'],self.violated_circles[i][0][1]+self.constants['boarder'])
-                self.violated_circles[i][0]=center
-                i+=1
+                center = (self.violated_circles[i][0][0]+(self.constants['boarder']//2),self.violated_circles[i][0][1]+(self.constants['boarder']//2))
+                self.violated_circles[i][0] = center
+                i += 1
             self.out_image = area_utils.sum_images(self.out_image,self.image_data_backup,self.constants['boarder'])
             self.out_image = image_utils.add_boarder(self.out_image,self.constants['boarder'])
 
@@ -60,11 +59,11 @@ class SimpleImage:
         self.image_dic['num_violated'] = len(self.violated_circles)
         #color circles that violated guidlines
         self.out_image = image_utils.color_holes2(self.violated_circles,self.out_image,float(self.constants['scale']))
+
         #save resulting image
-
-
+        folder = os.path.basename(os.path.dirname(self.image_dic['img_path']))
         image_utils.save_out_image(self.out_image,
-                                   './job-data/'+self.options['job_name']+'/'+ os.path.basename(os.path.normpath(self.image_dic['img_path'])))
+                                   './job-data/'+self.options['job_name']+'/'+folder+'/'+ os.path.basename(os.path.normpath(self.image_dic['img_path'])))
 
 
     def is_pass(self,regions):
@@ -103,16 +102,17 @@ class SimpleImage:
             True/False if region violates guidelines
         """
         scale_r = float(self.constants['scale'])
-
         max_diam = self.constants['max_allowed']
         coords = area_utils.remove_z_set(region['coords'])
         center,r = area_utils.get_largest_circle_in_region(coords)
 
         #convert r(px) => r(microns)
+        r*=2
         r*=scale_r
+
         if r>self.image_dic['largest_pore']:
             self.image_dic['largest_pore']=r
-        if not r<=max_diam:
+        if not r <= max_diam:
             print("FAILED R:",r ,"Microns")
             self.violated_circles.append([center,r])
         return r<=max_diam
@@ -127,7 +127,7 @@ class SimpleImage:
             self.out_image = image_utils.color_out_image(regions,self.out_image)
         self.set_porosity(img_seg)
         regions = list(filter(lambda reg: reg['area'] * scale_area > self.constants['min_ignore'],regions))
-        regions=sorted(regions,key=lambda reg:reg['area'], reverse=True)
+        regions = sorted(regions,key=lambda reg:reg['area'], reverse=True)
         return regions
 
     def prep_image(self):

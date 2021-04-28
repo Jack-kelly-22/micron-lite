@@ -1,6 +1,7 @@
 from skimage.draw import set_color
 from skimage.io import imsave
 from skimage.draw import circle,circle_perimeter,rectangle_perimeter
+
 def color_circle(c,r,image):
     x_ls,y_ls = circle_perimeter(int(c[0]),int(c[1]),r)
     #set_color(image, (y_ls,x_ls), color=(0, 77, 253))
@@ -12,7 +13,6 @@ def color_circle(c,r,image):
 
 
 def color_holes(hole_ls, image):
-    #print(len(hole_ls))
     for hole in hole_ls:
         color_circle(hole[4],hole[5],image)
     return image
@@ -31,9 +31,7 @@ def add_boarder(image,boarder):
 
     return image
 
-
 def save_out_image(image,out_path):
     save_name = '.' + out_path
     imsave(save_name,image)
     print("saved image at",save_name)
-    # io.imsave("." + self.image_out_path + "/" + self.name[:-4] + "_out.png", self.out_image)

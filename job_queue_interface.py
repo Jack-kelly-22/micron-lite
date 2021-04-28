@@ -169,6 +169,7 @@ class Interface():
         constants['min_ignore'] = float(self.min_var.get())
         constants['max_diam'] = float(self.max_diam.get())
         constants['min_porosity'] = float(self.min_pore.get())
+        constants['max_allowed'] = float(self.max_diam.get())
         constants['max_porosity'] = float(self.max_pore.get())
 
         if int(self.boarder_var.get()) > 1:

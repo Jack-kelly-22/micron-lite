@@ -4,7 +4,7 @@ class constants:
     constants1 = {
       "thresh": 120,
       "fiber_type": 'dark',
-      "use_alt": False,
+      "use_alt": True,
       "multi": True,
       "alt_thresh": 55,
       "min_ignore": 10,
@@ -37,7 +37,6 @@ class constants:
       "tags": ["NULL"],
       "largest_pore": 0,
       "out_path": "/job-data/",
-      # 'max_porosity':0.9,
       "num_images":0
     }
     # self.frame_dic = {}
