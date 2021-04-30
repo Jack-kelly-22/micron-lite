@@ -50,7 +50,7 @@ class Frame:
         self.db_ref = db_ref
         self.create_dir()
         self.process_frame()
-        self.save_histograms()
+
         self.add_frame_db()
 
     def create_dir(self):
