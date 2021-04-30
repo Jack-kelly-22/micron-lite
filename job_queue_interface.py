@@ -120,7 +120,7 @@ class Interface():
         font_1 = "Verdana 22 bold"
         font_2 = "Verdana 12"
         #pass requirement header
-        tk.Label(self.root, text="Pass Requirements", font=font_1).place(x=120, y=350)
+        tk.Label(self.root, text="Pass Requirements", font=font_2).place(x=50, y=320)
         #min porosity label and input
         tk.Label(self.root, text="Min porosity(%)", font=font_2).place(x=20, y=390)
         tk.Entry(self.root,textvariable=self.min_pore).place(x=130, y=390, width=50)
