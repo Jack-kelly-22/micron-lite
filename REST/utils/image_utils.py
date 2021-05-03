@@ -1,4 +1,4 @@
-from skimage.color import rgb2gray
+from skimage.color import rgb2gray,rgba2rgb
 from skimage.draw import set_color
 from skimage.io import imsave
 from skimage.draw import circle,circle_perimeter,rectangle_perimeter
@@ -54,7 +54,7 @@ def get_thresh_image(image, constants):
     return img_seg
 
 
-def get_alt_thresh_image(image, alt_thresh, fiber, ):
+def get_alt_thresh_image(image, alt_thresh, fiber,):
     image = rgb2gray(image)
     tr = threshold_local(image, 601, 'mean', mode='constant', cval=0, offset=-(alt_thresh / 255.0))
     if fiber == 'dark':
@@ -71,8 +71,10 @@ def get_alt_thresh_image(image, alt_thresh, fiber, ):
 def get_reg_thresh_image(image, threshold, fiber):
     """Performs constant image thresholding"""
     # image = tfImage.adjust_contrast(image,1.5)
-
-    image = rgb2gray(image)
+    try:
+        image = rgb2gray(rgba2rgb(image))
+    except:
+        image = rgb2gray(image)
     if fiber == 'dark':
         img_seg = (image > threshold / 255).astype(uint8)
     else:
@@ -94,10 +96,10 @@ def color_circle(c,r,image,scale):
     set_color(image, (y_ls, x_ls), color=(245, 0, 0))
 
 
-def color_holes(hole_ls, image):
-    for hole in hole_ls:
-        color_circle(hole[4],hole[5],image)
-    return image
+# def color_holes(hole_ls, image):
+#     for hole in hole_ls:
+#         color_circle(hole[4],hole[5],image)
+#     return image
 
 def color_holes2(hole_ls, image,scale):
     for hole in hole_ls:
