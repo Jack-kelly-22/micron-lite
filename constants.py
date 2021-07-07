@@ -4,8 +4,8 @@ class constants:
     constants1 = {
       "thresh": 120,
       "fiber_type": 'dark',
-      "use_alt": True,
-      "multi": True,
+      "use_alt": False,
+      "multi": False,
       "alt_thresh": 55,
       "min_ignore": 10,
       "warn_size": 5000,
@@ -18,7 +18,7 @@ class constants:
       'max_porosity': 0.09,
       'max_diam':50,
       'num_images':0,
-      "debug":True
+      "debug":False
     }
 
     self.version = {
