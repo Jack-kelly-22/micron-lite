@@ -65,7 +65,7 @@ class Interface:
 
         # setup constants areas
         x_const = 440
-        x_add = 120
+        x_add = 580
         y_const = 30
         y_space = 40
         contants_header = tk.Label(self.root, text="Options", font=font_1).place(
@@ -80,11 +80,6 @@ class Interface:
             "Circles",
         )
 
-        config_select = tk.OptionMenu(
-            self.root,
-            self.config_file,
-        )
-
         mutli_text = tk.Label(
             self.root,
             text="Multi-color",
@@ -95,7 +90,7 @@ class Interface:
         local_text = tk.Label(self.root, text="Local Thresholding").place(
             x=x_const + 200, y=y_const
         )
-        local_check = tk.Checkbutton(self.root).place(x=x_const + 200, y=y_const)
+        local_check = tk.Checkbutton(self.root).place(x=x_const + 100, y=y_const)
         y_const = y_const + 30
         thresh_text = tk.Label(self.root, text="Threshold", font=font_2).place(
             x=x_const, y=y_const
@@ -109,33 +104,33 @@ class Interface:
             x=x_const, y=y_const
         )
         ignore_val = tk.Entry(self.root, textvariable=self.min_var).place(
-            x=x_const+x_add, y=y_const, width=50
+            x=x_add, y=y_const, width=50
         )
 
         y_const += y_space
         circles_text = tk.Label(self.root, text="Circles to Draw").place(
-            x=x_const+x_add, y=y_const
+            x=x_const, y=y_const
         )
         circles_label = tk.Entry(
             self.root, width="30", textvariable=self.num_var
-        ).place(x=540, y=y_const, width=50)
+        ).place(x=x_add, y=y_const, width=50)
         y_const += y_space
         crop_text = tk.Label(self.root, text="Crop boarder").place(x=x_const, y=y_const)
         scale_entry = tk.Entry(
             self.root,
             textvariable=self.boarder_var,
-        ).place(x=x_const+x_add, y=y_const, width=50)
+        ).place(x=x_add, y=y_const, width=50)
         y_const += y_space
 
         scale_text = tk.Label(self.root, text="Scale(microns/px)").place(
-            x=x_const+x_add, y=y_const
+            x=x_const, y=y_const
         )
         scale_entry = tk.Entry(
             self.root, width="30", textvariable=self.scale_var
-        ).place(x=x_const, y=y_const, width=50)
+        ).place(x=x_add, y=y_const, width=50)
         y_const += y_space
         warn_text = tk.Label(self.root, text="warn size(microns)").place(
-            x=x_const+x_add, y=y_const
+            x=x_add, y=y_const
         )
         warn_entry = tk.Entry(self.root, width="30", textvariable=self.warn_var).place(
             x=540, y=y_const, width=50
