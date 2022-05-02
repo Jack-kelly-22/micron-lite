@@ -88,9 +88,9 @@ class Interface:
             x=x_const-30, y=y_const
         )
         local_text = tk.Label(self.root, text="Local Thresholding").place(
-            x=x_const + 200, y=y_const
+            x=x_const, y=y_const
         )
-        local_check = tk.Checkbutton(self.root).place(x=x_const + 100, y=y_const)
+        local_check = tk.Checkbutton(self.root).place(x=x_const - 40, y=y_const)
         y_const = y_const + 30
         thresh_text = tk.Label(self.root, text="Threshold", font=font_2).place(
             x=x_const, y=y_const
@@ -130,10 +130,10 @@ class Interface:
         ).place(x=x_add, y=y_const, width=50)
         y_const += y_space
         warn_text = tk.Label(self.root, text="warn size(microns)").place(
-            x=x_add, y=y_const
+            x=x_const, y=y_const
         )
         warn_entry = tk.Entry(self.root, width="30", textvariable=self.warn_var).place(
-            x=540, y=y_const, width=50
+            x=x_add, y=y_const, width=50
         )
 
         # clear_frames = tk.Button(self.root, text="Clear frames", command=self.clear_frames()).place(x=250, y=310)
