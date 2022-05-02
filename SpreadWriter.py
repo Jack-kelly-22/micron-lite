@@ -48,6 +48,7 @@ class SpreadWriter:
         #E7 Minimum porosity(%)
         self.page['E6'] = str(filter_dic['constants']['max_allowed'])
         self.page['E7'] = str(filter_dic['constants']['min_porosity']*100) + '%'
+        self.page["E10"] = str(filter_dic['num_pores'])
 
     def write_inspect_results(self,filter_dic):
         """Writes result data for each image"""
