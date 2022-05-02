@@ -65,6 +65,7 @@ class Interface:
 
         # setup constants areas
         x_const = 440
+        x_add = 120
         y_const = 30
         y_space = 40
         contants_header = tk.Label(self.root, text="Options", font=font_1).place(
@@ -89,7 +90,7 @@ class Interface:
             text="Multi-color",
         ).place(x=x_const + 30, y=y_const)
         multi_check = tk.Checkbutton(self.root, variable=self.multi_var).place(
-            x=x_const, y=y_const
+            x=x_const-30, y=y_const
         )
         local_text = tk.Label(self.root, text="Local Thresholding").place(
             x=x_const + 200, y=y_const
@@ -108,12 +109,12 @@ class Interface:
             x=x_const, y=y_const
         )
         ignore_val = tk.Entry(self.root, textvariable=self.min_var).place(
-            x=540, y=y_const, width=50
+            x=x_const+x_add, y=y_const, width=50
         )
 
         y_const += y_space
         circles_text = tk.Label(self.root, text="Circles to Draw").place(
-            x=x_const, y=y_const
+            x=x_const+x_add, y=y_const
         )
         circles_label = tk.Entry(
             self.root, width="30", textvariable=self.num_var
@@ -123,18 +124,18 @@ class Interface:
         scale_entry = tk.Entry(
             self.root,
             textvariable=self.boarder_var,
-        ).place(x=540, y=y_const, width=50)
+        ).place(x=x_const+x_add, y=y_const, width=50)
         y_const += y_space
 
         scale_text = tk.Label(self.root, text="Scale(microns/px)").place(
-            x=x_const, y=y_const
+            x=x_const+x_add, y=y_const
         )
         scale_entry = tk.Entry(
             self.root, width="30", textvariable=self.scale_var
         ).place(x=x_const, y=y_const, width=50)
         y_const += y_space
         warn_text = tk.Label(self.root, text="warn size(microns)").place(
-            x=x_const, y=y_const
+            x=x_const+x_add, y=y_const
         )
         warn_entry = tk.Entry(self.root, width="30", textvariable=self.warn_var).place(
             x=540, y=y_const, width=50
@@ -147,7 +148,7 @@ class Interface:
             x=x_const, y=y_const
         )
         name_entry = tk.Entry(self.root, textvariable=self.name_var).place(
-            x=540, y=y_const, width=180
+            x=x_const, y=y_const+40, width=180
         )
         self.frame.place(x=20, y=90)
         button = tk.Button(self.root, text="quit", command=self.close).place(
