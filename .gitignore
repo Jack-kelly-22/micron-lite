@@ -3,5 +3,6 @@
 __pycache__
 /job-data
 REST/data
-REST/dtypes/__pycache__
+REST/dtypes/__pycache__/
+*.pyc
 
