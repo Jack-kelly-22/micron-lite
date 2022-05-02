@@ -30,7 +30,7 @@ class Interface:
         self.root.title("Porosity Calculator")
         self.x_start = 0
         self.y_start = 0
-        self.root.geometry("800x500")
+        self.root.geometry("800x700")
         # Set window background color
         self.root.config()
         self.options = constants().default_options
